@@ -1,0 +1,411 @@
+<apex:page id="page" controller="onlinetestclass" showHeader="false" sidebar="false">
+    <html  xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <apex:slds />
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script>
+                    $(document).ready(function(){
+                    $("#submitdiv").hide();
+                    $("#exittext").hide();
+                    $("#pb").hide();
+                    $("#test1").hide();
+                    $("#header").hide();
+                    
+                });
+                
+                
+                function Startscript()
+                {
+                    $("#header").show();
+                    $("#instructions").hide();
+                    $("#startdiv").hide();
+                    $("#pb").show();
+                    var time_in_minutes =100;
+                    var current_time = Date.parse(new Date());
+                    var deadline = new Date(current_time + time_in_minutes*60*1000);
+                    
+                    
+                    function time_remaining(endtime){
+                        var t = Date.parse(endtime) - Date.parse(new Date());
+                        var seconds = Math.floor( (t/1000) % 60 );
+                        var minutes = Math.floor( (t/1000/60) % 60 );
+                        var hours = Math.floor( (t/(1000*60*60)) % 24 );
+                        var days = Math.floor( t/(1000*60*60*24) );
+                        return {'total':t, 'days':days, 'hours':hours, 'minutes':minutes, 'seconds':seconds};
+                    }
+                    function run_clock(id,endtime){
+                        var clock = document.getElementById(id);
+                        function update_clock(){
+                            var t = time_remaining(endtime);
+                            clock.innerHTML = t.minutes+ 'minutes ' +t.seconds+'seconds ';
+                            if(t.total<=0){  
+                                clearInterval(timeinterval);
+                                $("#test1").show();
+                                $("#test2").html("Time up!! Submit exam");
+                                $("#content").hide();
+                                $("#submitdiv").show();
+                                
+                            }
+                        }
+                        update_clock(); // run function once at first to avoid delay
+                        var timeinterval = setInterval(update_clock,1000);
+                    }
+                    
+                    
+                    
+                    run_clock('clockdiv',deadline);
+                    
+                }
+                
+                
+                var questionAnsMap = {};
+                function captureResponse(ele){
+                    var v = $("input[name='"+ele+"']:checked").val();
+                    questionAnsMap[ele] = v ;
+                    if(!$('#QuesBtn-'+ele).hasClass('greenColor')){
+                        $('#QuesBtn-'+ele).addClass('greenColor');
+                    }
+                    
+                    console.log(questionAnsMap);
+                }
+                
+                function captureMultiResponse(ele){
+                    var v = $("input[name='"+ele+"']:checked") ;
+                    var ansList = [];
+                    $(v).each(function(index,element){
+                        console.log(element);
+                        ansList.push($(element).val());
+                    });
+                    if(ansList.length==0){
+                        $('#QuesBtn-'+ele).removeClass('greenColor');
+                    }else{
+                        if(!$('#QuesBtn-'+ele).hasClass('greenColor')){
+                            $('#QuesBtn-'+ele).addClass('greenColor');
+                        }
+                    }
+                    questionAnsMap[ele] = ansList.join(",");
+                    console.log(questionAnsMap);
+                }
+                
+                function close()
+                {
+                    $("#test1").hide();
+                }
+                
+                function submitTest(){
+                    $("#test1").hide();
+                    $("#submitdiv").hide();
+                    $("#clockdiv").hide();
+                    $("#pb").hide();
+                    var c = '{! cid}';
+                    
+                    if(!jQuery.isEmptyObject(questionAnsMap)){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.onlinetestclass.saveResult}',
+                            questionAnsMap,c,
+                            function(result,event) {
+                                if(event.status) {
+                                    $("#test1").show();
+                                    $("#test2").html("Your Score is "+ result);
+                                    $("#exittext").show();
+                                    
+                                }else{
+                                }
+                            }
+                        );
+                    }else{
+                        $("#test1").show();
+                        $("#test2").html("Your Score is 0 with 0 attempted questions.")  
+                        $("#exittext").show();
+                    }
+                    
+                } 
+                function showSpecificQuestion(ele){
+                    $('.allQuestionClass').hide();
+                    $('#Ques-'+ele).show();
+                    $('.allQuesBtnClass').removeClass('slds-button_brand').addClass('slds-button_neutral');
+                    $('#QuesBtn-'+ele).removeClass('slds-button_neutral').addClass('slds-button_brand');
+                }   
+                function nextQuestion(ele){
+                    ele++;
+                    navigateToQuestion(ele);
+                }   
+                function previousQuestion(ele){
+                    ele--;
+                    navigateToQuestion(ele);
+                }
+                function navigateToQuestion(ele){
+                    var qMax = {! maxQues};
+                    if(ele>qMax){
+                        ele = 1;
+                    }else if(ele<=0){
+                        ele = qMax;
+                    }
+                    $('.qNavigator-'+ele).click();
+                }
+            </script>
+            
+             <style>
+                .slds-scope .slds-card+.slds-card {
+                    margin-top: 0rem;
+                }
+                 .greenColor{
+                    background: green !IMPORTANT;
+                    color: white !IMPORTANT;
+                 }
+                 .yellowColor{
+                    background: #ffeb3b !IMPORTANT;
+                    color: white !IMPORTANT;
+                 }
+                 #clockdiv {
+                 font-size: 20px;
+                 text-align: right;
+                 background-color: grey;
+                 color:white;
+                 }
+                 
+                 #test1{
+                 
+                 text-align: center;
+                 
+                 }
+                      
+            </style>
+        </head>
+        <body>
+            <div id="test1" style="display:none"> 
+                          <div class="demo-only" style="height:4rem">
+                          <div class="slds-notify_container slds-is-relative">
+                            <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                              <span class="slds-assistive-text">success</span>
+                              <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                  <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}"></use>
+                                </svg>
+                              </span>
+                              <div class="slds-notify__content">
+                                <h2 class="slds-text-heading_small slds-align_absolute-center">
+                                <div id="test2"></div>
+                                </h2>
+                              </div>
+                              <div class="slds-notify__close">
+                                  <button class="slds-button slds-button_icon slds-button_icon-inverse" onclick="close()" title="Close">
+                                      <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                          <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                      </svg>
+                                      <span class="slds-assistive-text">Close</span>
+                                  </button>
+                                  
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    
+
+                <div  id="startdiv" style="height:640px">
+                      <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                          <header class="slds-modal__header slds-text-heading_medium slds-hyphenate">
+                           <h4>Please read below instructions carefully</h4>
+                           </header>
+                          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                           
+                                <ol class="slds-list_ordered" type ="A">
+                                <li>Click on start button to start test.</li>
+                                <li>Test duration is : 30 mins.</li>
+                                <li>Once started you cannot quit in between.</li>
+                                <li>You can add more than 1 answer for checkbox.</li>
+                                <li>Click on submit button and know your score after time is up.</li>
+                                </ol>
+                          </div>
+                          <footer class="slds-modal__footer">
+                              <apex:form >
+                                  <apex:commandButton disabled="{!If(cid != null && Len(cid) > 0,false, true)}" value="Start Test" styleClass="slds-button slds-button--brand" action="{!testdisplay}" onClick="Startscript();" reRender="block" />
+                              </apex:form>
+                          </footer>
+                        </div>
+                      </section>
+                      <div class="slds-backdrop slds-backdrop_open"></div>
+                 </div>
+                
+<div id="header" class="slds-tabs_card">
+<div class="slds-page-header">
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-title">
+<div class="slds-media">
+<div class="slds-media__figure">
+<span class="slds-avatar">
+<img alt="Person name" src="/apexpages/slds/latest/assets/images/avatar1.jpg" title="Person name" />
+</span>
+</div>
+<div class="slds-media__body">
+<div class="slds-page-header__name">
+<div class="slds-page-header__name-title">
+<h1>
+<span>{! cand.Current_Employer__c }</span>
+<span class="slds-page-header__title slds-truncate" title="Recently Viewed">{! cand.First_Name__c } {! cand.Last_Name__c  }</span>
+</h1>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<div class="slds-page-header__col-actions">
+<div class="slds-page-header__controls">
+<div class="slds-page-header__control">
+<ul class="slds-button-group-list">
+<li>
+<button class="slds-button slds-button_neutral" id="clockdiv"></button>
+</li>
+<li>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-meta">
+<p class="slds-page-header__meta-text">{! cand.Education__c  }  • {! cand.Email__c  }  • {! cand.Country__c   }</p>
+</div>
+
+</div>
+</div>
+</div>    
+                    
+                    
+                    
+                    
+                    
+                    <div id="pb" style="display:none;">
+
+                    <apex:outputPanel id="block">
+                   
+                    <div class="slds-p-around_small slds-grid">
+                        <div class="slds-col slds-size_2-of-3">
+                            <div class="slds-p-around_small">
+                            
+                        <apex:repeat value="{!qlist}" var="ques" >
+                              <div class="slds-card allQuestionClass" id="Ques-{! ques.Id}" style="{! IF(ques.Name == '1','','display:none;')}">
+                                <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                
+                                <div class="">
+                                <h2 class="slds-card__header-title">
+                                <span>{!ques.Name}. </span><span>{!ques.QStatement__c}</span>
+                                
+                                </h2>
+                                </div>
+                                
+                                </header>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <apex:repeat value="{!ques.Answers__r}" var="ans" >
+                                     <apex:outputPanel rendered="{! !ques.Multianswers__c}">
+                                        <div class="">
+                                         <span class="slds-radio">
+                                              <input type="radio" name="{!ques.id}" id="{!ans.Id}" value="{!ans.Id}" onChange="captureResponse('{!ques.id}')" />
+                                              <label class="slds-radio__label" for="{!ans.Id}">
+                                                <span class="slds-radio_faux"></span>
+                                                <span class="slds-form-element__label">{!ans.Ans_statement__c}</span>
+                                              </label>
+                                            </span>
+                                         </div>
+                                      </apex:outputPanel>
+                                      <apex:outputPanel rendered="{! ques.Multianswers__c}">
+                                      <div class="">
+                                            <div class="slds-checkbox">
+                                              <input type="checkbox" name="{!ques.id}" id="{!ans.Id}" value="{!ans.Id}" onChange="captureMultiResponse('{!ques.id}')"/>
+                                              <label class="slds-checkbox__label" for="{!ans.Id}">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label">{!ans.Ans_statement__c}</span>
+                                              </label>
+                                            </div>
+                                          </div>
+                                      </apex:outputPanel>
+                                 </apex:repeat>
+                               </div>
+                               <div class="slds-card__footer">
+
+                                   <button class="slds-button slds-button_brand" onClick="previousQuestion('{! ques.Name}');">
+                                       Previous
+                                   </button>
+                                   <button class="slds-button slds-button_brand" onClick="nextQuestion('{! ques.Name}');">
+                                       Next
+                                   </button>
+
+                              </div>  
+                             </div>
+                         </apex:repeat>
+                                </div>
+                        </div>
+                       
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="slds-p-around_small">
+                                <div class="slds-card">
+                                <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                
+                                <div class="">
+                                <h2 class="slds-card__header-title">
+                                <span>Questions Navigator</span>
+                                
+                                </h2>
+                                </div>
+                                
+                                </header>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <div>
+                                        <apex:repeat value="{!qlist}" var="ques" >
+                                            <button class="slds-button qNavigator-{!ques.Name} allQuesBtnClass {! IF(ques.Name == '1','slds-button_brand','slds-button_neutral')}" id="QuesBtn-{! ques.Id}" onClick="showSpecificQuestion('{! ques.Id}');">
+                                                {! ques.Name}
+                                            </button>
+                                        </apex:repeat>
+                                    </div>
+                               </div>
+                             </div>
+                            </div>
+                        </div>
+                        </div>
+                       </apex:outputPanel>
+
+                    </div>
+                    
+
+             
+             
+               <div  id="submitdiv" style="height:640px;display:none;" >
+                      <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                          <header class="slds-modal__header slds-text-heading_medium slds-hyphenate">
+                          Click here to submit.
+                          </header>
+                          <footer class="slds-modal__footer">
+                             <button  class="slds-button slds-button_brand" onClick="submitTest();">Submit</button>
+                          </footer>
+                        </div>
+                      </section>
+                      <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+                
+           <div id="exittext" style="height:640px;display:none;">
+              <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                  <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    Test successfully completed.<br></br>Thank you!!!.
+                    </h2>
+                  </header>
+                 </div>
+              </section>
+             <div class="slds-backdrop slds-backdrop_open"></div>
+           </div>     
+           
+        </body>
+        
+    </html>
+</apex:page>

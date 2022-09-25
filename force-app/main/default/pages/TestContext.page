@@ -1,0 +1,6 @@
+<apex:page showHeader="false" sidebar="false">
+  <h1>Visualforce Page</h1> 
+   <p>UserId: {!$User.Id}</p>
+   <p>User Email: {!$User.Email}</p>
+   <p>User Name: {!$User.Username}</p>
+</apex:page>

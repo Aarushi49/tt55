@@ -1,0 +1,10 @@
+<aura:component >
+    <div class="slds-p-around_small">
+        <div>
+            Welcome to learning of attributes !!!
+        </div>
+        <lightning:input aura:id="testid" label="PLease enter a value"/>
+        <br/>
+        <lightning:button variant="brand" value="Check Button" label="Check Button Label" onclick="{!c.doClick}"/>
+    </div>
+</aura:component>

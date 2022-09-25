@@ -1,0 +1,65 @@
+<aura:component controller="contactListController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:utilityBarAPI aura:id="utilitybar" />
+    <aura:attribute name="spinner" type="boolean" default="true"/>
+    
+    <aura:attribute name="subject" type="String" default=""/>
+    <aura:attribute name="notes" type="String" default=""/>
+    <aura:attribute name="comments" type="String" default=""/>
+    
+    <aura:attribute name="accList" type="Object" />
+    <aura:attribute name="acctId" type="String" />
+    <aura:attribute name="accSearchKey" type="String" />
+    
+    <aura:attribute name="contactList" type="Object" />
+    <aura:attribute name="contactId" type="String"/>
+    <aura:attribute name="SearchKey" type="String" />
+    
+    <div style="padding:10px;">
+        <lightning:select name="Subject" label="Subject" required="true" value="{!v.subject}">
+            <option value="">choose one...</option>
+            <option value="CALL">CALL</option>
+            <option value="ORDER">ORDER</option>
+            <option value="ISSUE">ISSUE</option>
+            <option value="OTHER">OTHER</option>
+        </lightning:select>
+        
+        <lightning:select name="Notes" label="Notes" required="true" value="{!v.notes}">
+            <option value="">choose one...</option>
+            <option value="Left a voicemail, text, e-mail">Left a voicemail, text, e-mail</option>
+            <option value="Returning missed call">Returning missed call</option>
+            <option value="Follow-Up">Follow-Up</option>
+            <option value=" Lead List Call">Lead List Call</option>
+            <option value="OTHER">OTHER</option>
+        </lightning:select>
+        
+        <lightning:textarea name="Commments" label="Commments" value="{!v.comments}"/>
+        
+         <div onkeyup="{!c.handleAccSearch}">
+            <lightning:input value="{!v.accSearchKey}" aura:id="accSearchId"  name="enter-search" label="AccountId" type="search" laceholder ="Please enter Name..."/>
+        </div>
+        <aura:if isTrue="{! and(v.accList != null,v.accList !='')}">
+            <div class="listcss" >
+                <aura:iteration items="{!v.accList}" var="item">
+                    <lightning:button value="{!item.Name}" iconName="action:add_contact" name="{!item.Id}" class="buttonDecor" variant="base" label="{!item.Name}" title="{!item.Name}" onclick="{!c.handleAccSelection}" /><br/>
+                </aura:iteration>
+            </div>
+        </aura:if> 
+        
+        <div onkeyup="{!c.handleContactSearch}">
+            <lightning:input value="{!v.SearchKey}" aura:id="searchId"  name="enter-search" label="ContactId" type="search" laceholder ="Please enter Name..."/>
+        </div>
+        <aura:if isTrue="{! and(v.contactList != null,v.contactList !='')}">
+            <div class="listcss" >
+                <aura:iteration items="{!v.contactList}" var="item">
+                    <lightning:button value="{!item.Name}" iconName="action:add_contact" name="{!item.Id}" class="buttonDecor" variant="base" label="{!item.Name}" title="{!item.Name}" onclick="{!c.handleContactSelection}" /><br/>
+                </aura:iteration>
+            </div>
+        </aura:if> 
+        
+        
+        <div class="slds-align_absolute-center" style="height:5rem">
+            <lightning:button class="slds-align_absolute-center" variant="brand" label="Save" title="Save" onclick="{! c.handleClick }" />
+        </div>
+    </div>
+</aura:component>

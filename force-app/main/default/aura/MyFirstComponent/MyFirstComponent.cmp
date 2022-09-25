@@ -1,0 +1,15 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="NumA" type="Decimal" access="public"/>
+    <aura:attribute name="NumB" type="Decimal" access="public"/>
+    
+    <div class="slds-p-around_large">
+        <lightning:input type="number" name="input1" label="Number field with placeholder" value="{!v.NumA}"/>
+        <br/>
+        
+        <lightning:input type="number" name="input2" label="Number field with placeholder" placeholder="type here..." value="{!v.NumB}" formatter="percent-fixed"/>
+        <br/>
+        {!div(mult(v.NumA,v.NumB),100)}  
+        
+    </div>
+    
+</aura:component>

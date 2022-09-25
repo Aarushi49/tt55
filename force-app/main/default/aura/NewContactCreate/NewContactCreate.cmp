@@ -1,0 +1,19 @@
+<aura:component controller="ContactListComponentController">
+    <aura:attribute type="Contact" name="NewContact" default="{sobjectName : 'Contact',
+                                                              FirstName : '',
+                                                              LastName : '',
+                                                              Email : '',
+                                                              Phone : ''
+                                                              }" />
+    <aura:attribute type="string" name="IdAccount"/>
+    <aura:registerEvent name="ListEvent" type="c.EventHandler"/>
+    <div class="slds-p-around_large">
+        <lightning:input value="{!v.NewContact.FirstName}" type="text" label="First Name" required ="true"/>
+        <lightning:input value="{!v.NewContact.LastName}" type="text" label="Last Name" required ="true"/>
+        <lightning:input value="{!v.NewContact.Email}" type="email" label="Email" required ="true"/>
+        <lightning:input value="{!v.NewContact.Phone}" type="phone" label="Phone" required ="true"/>
+        <br/>
+        <br/>
+        <lightning:button onclick="{!c.CreateNewContact}" label="Create Contact" variant ="brand" class="slds-align_absolute-center"/>
+    </div>
+</aura:component>

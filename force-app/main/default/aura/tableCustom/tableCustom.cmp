@@ -1,0 +1,26 @@
+<aura:component controller="closingChecklistController">
+    <aura:attribute name="tasks" type="Map" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="rollupColumns" type="List" />
+    <aura:attribute name="tableData" type="Object" />
+    <aura:attribute name="stageName" type="String" />
+    <aura:attribute name="tableIndex" type="Integer" /> 
+    <aura:attribute name="currentUserName" type="String" />
+    <aura:attribute name="showModal" type="boolean" />
+    <aura:attribute name="rcdId" type="String" />
+    <aura:registerEvent name="refreshTable" type="c:refreshTable"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="dataTableSaveEvent" event="c:dataTableSaveEvent" action="{!c.saveTableRecords}"/>    
+    
+    <aura:if isTrue="{!v.tableData.length > 0}">
+        <lightning:card title="{!v.stageName}">
+            <aura:set attribute="actions">
+                <lightning:button label="New" onclick="{!c.newTask}"/>
+            </aura:set>
+            <div>
+                {!v.body}
+            </div>
+        </lightning:card>
+    </aura:if>
+</aura:component>

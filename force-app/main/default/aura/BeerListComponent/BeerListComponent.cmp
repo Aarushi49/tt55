@@ -1,0 +1,33 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hassobjectName,force:hasRecordId" access="global" >
+    <aura:attribute name="BeerList" type="Object"/>
+    <aura:attribute name="Beerid" type="String"/>
+    
+    <lightning:overlayLibrary aura:id="overlayLib" />
+    <div class="slds-p-around_small slds-grid slds-wrap">
+        <aura:iteration items="{!v.BeerList}" var="item">
+            <div class="slds-p-around_small slds-col slds-size_1-of-3">
+                <lightning:card footer="{!item.Price__c}" title="{!item.name__c}" iconName="custom:custom9">
+                    <aura:set attribute="actions">
+                        <lightning:button label="New" variant="brand" name="{!item.Id}" value="{!item.name__c}" onclick="{!c.ShowDetails}"/>
+                    </aura:set>
+                    <p class="slds-p-horizontal_small">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_1-of-3">
+                                <img src="{!$Resource.Beerbottle}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                Name - {!item.name__c}
+                                Id - {!item.Id__c}
+                                Price - {!item.Price__c}
+                                Alcohol % - {!item.alcohol__c}
+                            </div>
+                        </div>
+                    </p>
+                </lightning:card>
+            </div>
+        </aura:iteration>
+    </div>
+    
+    <lightning:navigation aura:id ="Navigation" />
+    
+</aura:component>

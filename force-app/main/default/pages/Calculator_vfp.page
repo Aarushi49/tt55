@@ -1,0 +1,26 @@
+<apex:page Controller="Calculator" renderAs="pdf">
+  <apex:form >
+      <apex:pageBlock title="My Block" >
+          <apex:pageBlockSection title="My Page Block" columns="2">
+             
+              <apex:outputLabel >Number1=</apex:outputLabel>
+              <apex:inputtext value="{!num1}"/>
+              
+               <apex:outputLabel >Number2</apex:outputLabel>
+              <apex:inputtext value="{!num2}"/>
+              
+              <apex:CommandButton value="ADD" action="{!add}" />
+            
+               <apex:CommandButton value="SUB" action="{!sub}" />
+              
+               <apex:CommandButton value="MULT" action="{!mult}" />
+              
+               <apex:CommandButton value="DIV" action="{!div}" />
+               
+               <apex:outputLabel >REsult = {!result}
+               </apex:outputLabel>
+              
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>

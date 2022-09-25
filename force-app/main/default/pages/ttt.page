@@ -1,0 +1,19 @@
+<apex:page controller="trrtclass" showHeader="false">
+    
+    <apex:form >
+        <apex:actionFunction action="{!hey}" name="hey" reRender="hoja"  />
+        <apex:outputPanel id="hoja">
+            <apex:commandLink styleclass="btn-primary" id="SaveButtonID" status="mystatus"  value="hey1"  style="margin-right:5px;background: rgb(23, 124, 156) !important;text-decoration: none !important;padding: 0.7rem 1rem;"/>
+            
+        </apex:outputPanel>
+    </apex:form>
+    <script>
+    $(document).ready(function(){
+        $('.SaveButtonID').on('click', function(e) {
+            e.preventDefault();
+            $(this).attr("onclick", "return false;");
+        });
+    });
+                      
+    </script>
+</apex:page>

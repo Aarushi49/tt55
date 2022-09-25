@@ -1,0 +1,116 @@
+<apex:page showHeader="false" sidebar="false" cache="false" controller="growthLoginController" docType="html-5.0" >
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <apex:slds />
+        </head>
+        <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+        <script>
+            var j$ = $.noConflict();
+        
+        function submitNow(){
+            //alert(j$("#Username").val());
+            alert(j$('input[id$=ErrorMessage]').val());
+            var msg=j$('input[id$=ErrorMessage]').val();
+            if(j$('input[id$=ErrorMessage]').val() != null){
+                if(j$("#errorToast").hasClass('slds-hide')){
+                    showErrorToast(j$('input[id$=ErrorMessage]').val());
+                }
+            }
+        }
+        
+        function showErrorToast(errorMessage){
+            if(errorMessage != null){
+                if(j$("#errorToast").hasClass('slds-hide')){
+                    j$("#errorToast").removeClass('slds-hide');
+                    j$("#errorToast").addClass('slds-show');
+                    j$("#errorToastMesssage").html(errorMessage);
+                    
+                    setTimeout(function(){  
+                        j$("#errorToast").removeClass('slds-show');
+                        j$("#errorToast").addClass('slds-hide');
+                    }, 20000);
+                    
+                    
+                }
+            }
+        }
+        
+        function closeToast(errorToast){
+            j$("#errorToast").removeClass('slds-show');
+            j$("#errorToast").addClass('slds-hide');
+        }
+        
+        </script>
+        <style>
+            .form{
+            max-width: 404px;
+            padding: 5rem;
+            background: #ffffff;
+            margin: 100px auto 100px;
+            box-shadow: 0 0 20px 0 rgb(0 0 0 / 20%), 0 5px 5px 0 rgb(0 0 0 / 24%);
+            }
+            
+        </style>   
+        <apex:form styleclass="form" style="padding-left: 2vw;padding-top: 7vh;padding-right: 2vw;">
+            <apex:actionFunction action="{!checkPassword}" name="logIn" oncomplete="submitNow(); return false;" reRender="ErrorMessage"/>
+            <apex:inputHidden id="ErrorMessage" value="{!ErrorMessage}"/>
+            
+            <!----------------------------------------Main Page Start------------------------------------------------------------>
+            
+            <div style="text-align: center;">
+                <apex:image url="{!$Resource.Welcome}" width="150" height="150"/>
+            </div>
+            <br/>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="text-input-id-1">
+                    <abbr class="slds-required" title="required">* </abbr>Username</label>
+                <div class="slds-form-element__control">
+                    <apex:input value="{!Username}" id="Username" type="text" required="true" styleClass="slds-input"/>
+                </div>
+            </div>
+            <br/>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="text-input-id-1">
+                    <abbr class="slds-required" title="required">* </abbr>Password</label>
+                <div class="slds-form-element__control">
+                    <apex:inputSecret value="{!password}" id="password" required="true" styleClass="slds-input"/>
+                </div>
+            </div>
+            <div style="text-align: center;padding-top: 22px;padding-bottom: 10px;">
+                <button id="checkPassword" class="slds-button slds-button_brand" style="width: -webkit-fill-available;background-color: #00376d;" onclick="logIn(); return false;">Log Into Portal</button>
+            </div>
+            <div style="text-align:center;">  
+                <span>Forgot Password ?</span>
+            </div>
+            <!----------------------------------------Main Page End------------------------------------------------------------>
+            
+            <!-----------------------------------------Error Toast Start------------------------------------------------------->
+            
+            <div class="slds-hide slds-is-fixed slds-notify_container slds-is-relative" style="height:4rem" id="errorToast" >
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                    <span class="slds-assistive-text">error</span>
+                    <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                            <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#error')}"></use>
+                        </svg>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small" ><span id="errorToastMesssage">sss</span>
+                        </h2>
+                    </div> 
+                    <div class="slds-notify__close">
+                        <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" style="padding-top: 19px;" onclick="closeToast(this); return false;">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-----------------------------------------Error Toast End------------------------------------------------------->
+            
+        </apex:form>
+    </html>
+</apex:page>

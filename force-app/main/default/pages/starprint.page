@@ -1,0 +1,5 @@
+<apex:page controller="starcont">
+<h1> The triangle pattern is </h1> 
+<br></br>
+<apex:outputText value="{!s1}" style="white-space:pre;" ></apex:outputText>
+</apex:page>

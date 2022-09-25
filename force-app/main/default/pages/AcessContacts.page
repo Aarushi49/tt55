@@ -1,0 +1,27 @@
+<apex:page standardController="Contact"  extensions="Controllerclass" >
+  <apex:form >
+
+    <apex:inputField styleClass="slds-input" value="{!con.AccountId}"/>
+      <br/>
+      <br/>
+    <apex:commandButton value="Get Contacts" action="{!tcontacts}" reRender="block" />
+     <br/>
+     <br/>
+    <apex:pageBlock title="Related Contacts" id="block">
+        <apex:pageBlockTable value="{!contlist}" var="item" id="table">
+            <apex:column headerValue="Actions">
+            <apex:outputlink title="" value="/{!item.id}/e?retURL=/apex/{!$CurrentPage.Name}?AccountId={!item.Accountid}" target="_parent">Edit</apex:outputlink> &nbsp;|&nbsp;
+            <apex:outputlink onclick="javascript:if (window.confirm('Are you sure?')) actionfunc('{!item.id}'); return false;">Del</apex:outputlink>
+    
+            </apex:column>
+            <apex:column headervalue="Contactid" value="{!item.id}"/>
+            <apex:column value="{!item.lastname}"/>
+             <apex:column value="{!item.AccountId}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+         <apex:actionFunction name="actionfunc" action="{!deletemethod}" reRender="block">
+         <apex:param value="" name="idd" assignto="{!delvalue}"/>
+        </apex:actionFunction>
+        
+  </apex:form>
+</apex:page>

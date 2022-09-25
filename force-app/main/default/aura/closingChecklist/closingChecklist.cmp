@@ -1,0 +1,28 @@
+<aura:component implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId" controller="closingChecklistController">
+    <aura:attribute name="tasks" type="Map" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="stages" type="List" />
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="currentUserName" type="String" />
+    <aura:attribute name="recordId" type="String" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="refreshEvent" event="c:refreshTable" action="{!c.refreshTable}"/> 
+    
+    <aura:if isTrue="{!v.stages.length > 0}">
+        <aura:iteration items="{!v.stages}" var="stageName" indexVar="tableIndex">
+            <c:tableCustom
+                tasks="{!v.tasks}"
+                columns="{!v.columns}"
+                stageName="{!stageName}"
+                tableIndex="{!tableIndex}"
+                currentUserName="{!v.currentUserName}"
+                rcdId="{!v.recordId}"           
+            />
+        </aura:iteration>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner alternativeText="Loading.." variant="brand"/>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,129 @@
+.THIS .cTable.slds-table_fixed-layout tbody {
+    transform: none !important;
+}
+.THIS .cTable thead th {
+    background-color:#f9f9fa;
+    min-height: 1.3rem;
+}
+.THIS .cTable tbody td {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+.THIS .cTable tbody td .slds-avatar_small {
+    margin-right: 0.10rem !important;
+}
+
+.THIS .cTable .slds-th__action {
+    padding: .5rem;
+    height: 1.75rem;
+}
+.THIS .ctTextarea {
+    width: 100%;
+}
+.THIS .ctTextarea .slds-form-element__label:empty {
+    display: none;
+}
+.THIS .ctTextarea textarea {
+    min-height: 6rem;
+}
+.THIS .ctInput {
+    width: 100%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    line-height: 1.5rem;
+}
+.THIS .ctInput .slds-input {
+    height: 1.5rem;
+    min-height: 1.5rem;
+    line-height: 1.5rem;
+}
+.THIS .ctInput .slds-select { 
+    min-height: 1rem !important; 
+    height: 1.5rem; 
+    padding-left:.3rem !important; 
+    padding-right:1.2rem !important;
+}
+.THIS .ctInput .slds-select_container::before { 
+    border-bottom: 0 !important; 
+}
+.THIS .ctInput .slds-form-element__label {
+    display: none;
+}
+.THIS .ctFooter.slds-modal__footer {
+    padding: .5rem;
+    text-align: center;
+}
+.THIS .slds-datepicker table {
+    table-layout: fixed;
+    width: 300px;
+}
+.THIS .slds-datepicker .slds-day{
+    width: auto !important;
+    min-width: auto !important;
+    height: auto !important;
+    line-height: inherit !important;
+}
+.THIS .slds-shrink-none {
+    margin-top: 5px;
+}
+.THIS .avatar-wrapper {
+    position: relative;
+}
+.THIS .avatar-help-text {
+    position: absolute;
+    opacity: 0;
+    left: 4px;
+}
+.THIS .no-ellipsis {
+    white-space: normal;
+    /* line-height: 1rem; */
+}
+.THIS .custom-popover-wrapper {
+    position: relative;
+    display: none;
+    color: #fff;
+    background: #032e61;
+    border-color: #032e61;
+}
+.THIS .custom-popover-wrapper svg {
+    cursor: pointer;
+    position: absolute;
+    top: -10px;
+    left: -30px;
+    z-index: 10;
+    fill: #fff;
+}
+.THIS .custom-popover-wrapper svg:hover {
+    fill: #c9c9c9;
+}
+.THIS .custom-popover-wrapper::before {
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    transform: rotate(45deg);
+    content: "";
+    background-color: inherit;
+    top: 50%;
+    left: -.5rem;
+    margin-top: -.5rem;
+}
+.THIS .custom-popover-wrapper::after {
+    box-shadow: -1px 1px 2px 0 rgba(0,0,0,.16);
+    z-index: -1;
+}
+.THIS .custom-popover-body {
+    position: absolute;
+    top: -20px;
+    right: 0;
+    border-radius: 4px;
+    z-index: 1;
+    color: #fff;
+    background: #032e61;
+    border-color: #032e61;
+    white-space: initial;
+    min-width: 400px;
+}
+.THIS .badge-wrapper {
+    width: 100%;
+    text-align: center;
+}

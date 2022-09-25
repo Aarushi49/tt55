@@ -1,0 +1,31 @@
+<apex:page controller="contactcontroller" lightningStylesheets="True">
+    <apex:form >
+        <script>
+        function clickok(){
+            var jj = document.getElementById('formInput').value;
+            alert(jj);
+        }
+        
+        </script>
+        
+        <apex:slds />
+        <div class ="slds-scope" >
+            
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="form-element-01">Form Label1</label>
+                <div class="slds-form-element__control">
+                    <apex:inputText id="text-input-id-1" html-placeholder="Write Text" value="{!con.firstname}"  styleclass="slds-input" />
+                </div>
+            </div>
+            
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="form-element-01">Form Label</label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="formInput" placeholder="Placeholder text…" class="slds-input" onchange="clickok();"/>
+                </div>
+            </div>
+            
+            
+        </div>
+    </apex:form>
+</apex:page>

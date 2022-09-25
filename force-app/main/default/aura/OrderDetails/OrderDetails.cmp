@@ -1,0 +1,52 @@
+<aura:component implements="lightning:isUrlAddressable">
+    <aura:handler name="init" value="{!this}" action ="{!c.doInit}"/>
+    <aura:attribute name="orderId" type="String"/>
+    
+    <!-- Use LDS for getting the information of related Beer -->
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="orderRecord" type="Object" />
+    <aura:attribute name="targetError" type="String" />
+    <force:recordData aura:id="recordViewer"
+                      layoutType="FULL"
+                      recordId="{!v.orderId}"
+                      targetError="{!v.targetError}"
+                      targetRecord="{!v.record}"
+                      targetFields ="{!v.orderRecord}"
+                      mode="VIEW" />
+    
+    <div class="slds-page-header">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-opportunity" title="opportunity">
+                              <lightning:icon iconName="custom:custom17" size="large" alternativeText="Indicates approval"/>
+                            <span class="slds-assistive-text">    {!v.orderRecord.Name}</span>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate" title="Rohde Corp - 80,000 Widgets">{!v.orderRecord.Order_Number__c}</span>
+                                </h1>
+                            </div>
+                        </div>
+                        <p class="slds-page-header__name-meta">    {!v.orderRecord.Order_Number__c}  </p>
+    					<p><lightning:formattedDateTime value="{!v.orderRecord.CreatedDate}" year="2-digit" month="short" day="2-digit" weekday="long"/></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-p-around_large">
+    <lightning:recordForm
+        recordId="{!v.orderId}"
+        objectApiName="Beer_Order__c"
+        layoutType="Full"
+        columns="2"
+        mode="readonly" />
+     
+    </div>
+     
+</aura:component>

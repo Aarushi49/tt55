@@ -1,0 +1,28 @@
+<apex:page standardController="contact">
+<apex:form >
+                  <apex:inputField Styleclass="slds-input isRequired" value="{! contact.createddate}"  id="dob"  onkeyup="dobkeyup()" style="text-transform: uppercase;"/>
+
+ </apex:form>
+
+<script>
+function dobkeyup(){
+           var val = $('input[id$=dob]').val().replace(/\D/g, '');
+           var newVal = '';
+           if(val.length > 3) {
+              $('input[id$=dob]').val(val);
+           }
+           if((val.length > 2) && (val.length < 5)) {
+             newVal += val.substr(0, 2) + '/';
+             val = val.substr(2);
+           }
+           if (val.length > 4) {
+             newVal += val.substr(0, 2) + '/';
+             newVal += val.substr(2, 2) + '/';
+             val = val.substr(4);
+           }
+           newVal += val;
+           $('input[id$=dob]').val(newVal.substring(0, 10));
+           
+       }
+</script>
+</apex:page>

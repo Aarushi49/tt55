@@ -1,0 +1,14 @@
+<apex:page standardController="Account" setup="false" sidebar="false" showHeader="true" tabstyle="Contact">
+<apex:sectionHeader title="Account Edit" subtitle="New Account"/>
+<apex:form >
+<apex:PageBlock title="Account Edit">
+<apex:Pageblockbuttons location="both">
+<apex:commandButton value="Save Record" action="{!Save}"/>
+<apex:commandButton value="Cancel" action="{!Cancel}"/>
+<apex:pageblocksection title="Account information" columns="2" collapsible="true">
+<apex:inputfield value="{!Account.Name}"/>
+</apex:pageblocksection>
+</apex:Pageblockbuttons>
+</apex:PageBlock>
+</apex:form>
+</apex:page>

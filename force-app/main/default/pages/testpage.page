@@ -1,0 +1,13 @@
+<apex:page controller="testpagecontroller">
+ <apex:form id="form">
+        <apex:outputText id="script" value="{!varA}">
+        <script>
+            function hello() {
+                var helloWord = "{!JSENCODE(varA)}"
+                alert(helloWord);
+            }
+        </script>
+        </apex:outputText>
+        <button onclick="hello()">Say Something!</button>
+    </apex:form>
+</apex:page>

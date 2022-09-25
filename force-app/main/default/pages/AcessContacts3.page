@@ -1,0 +1,102 @@
+<apex:page standardController="Contact"  extensions="Controllerclass" sidebar="false" showHeader="false">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+<head>
+      <apex:slds />     
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"/>
+<apex:form id="block">
+   
+<div class="slds-page-header" role="banner">
+  <div class="slds-grid">
+    <div class="slds-col slds-has-flexi-truncate">
+          <h1 class="slds-page-header__title slds-truncate" title="My Accounts">Accounts</h1>
+          <apex:inputField styleclass="slds-box slds-box_xx-small" value="{!con.AccountId}" style="width:40%;height=10%;"/>
+         <br/>
+         <p class="slds-text-title_caps slds-line-height_reset"><br/>Lookup to select an account</p>
+        <br/>
+     </div>
+     <div class="slds-col slds-align-top">
+    <br/>
+         <apex:commandButton value="Get Contacts" action="{!tcontacts}" styleclass="slds-col slds-button slds-button_brand" style="margin-left:200px;"/>
+   </div>
+  </div>
+</div>     
+       <apex:pageMessages id="showmsg"></apex:pageMessages>
+       <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" >
+              <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                        <div class="slds-truncate" title="Actions">
+                            Actions
+                        </div>
+                        </th>
+                        <th class="" scope="col">
+                        <div class="slds-truncate" title="Contact id">
+                            Contact id
+                        </div>
+                        </th >
+                        <th class="" scope="col">
+                        <div class="slds-truncate" title="Contact Name">
+                            Contact Name
+                        </div>
+                        </th>
+                        <th class="" scope="col">
+                        <div class="slds-truncate" title="Accountid">
+                            Accountid
+                        </div>
+                        </th>
+                         <th class="" scope="col">
+                        <div class="slds-truncate" title="Loan Amount">
+                            Loan Amount
+                        </div>
+                        </th>
+                    </tr>
+                    </thead> 
+                    <tbody>
+                   
+                    <apex:repeat value="{!contlist}" var="item" id="block2">
+                            <tr class="slds-hint-parent">
+                            <td data-label="Actions">
+                            <div class="slds-truncate slds-col" title="Actions" scope="row">
+                            <a href="/lightning/r/{!item.id}/view?0.source=alohaHeader/?retURL=/apex/{!$CurrentPage.Name}?AccountId={!item.Accountid}">Edit</a> &nbsp;|&nbsp;
+                            <a onclick="javascript:if (window.confirm('Are you sure?')) actionfunc('{!item.id}'); document.location.reload(true);">Del</a>
+                            </div>
+                            </td>
+                            
+                            <td data-label="Contact id">
+                             <div class="slds-truncate slds-col" title="Contact id">
+                                {!item.id} 
+                             </div>
+                            </td>
+                            
+                            <td data-label="Contact Name">
+                             <div class="slds-truncate slds-col" title="Contact Name">
+                                {!item.lastname}
+                              </div>
+                            </td>
+                            
+                            <td data-label="Accountid">
+                            <div class="slds-truncate slds-col" title="Accountid">
+                                {!item.Accountid}
+                             </div>
+                            </td>
+                            
+                             <td data-label="Loan Amount">
+                            <div class="slds-truncate slds-col" title="Accountid">
+                                {!item.lOAN_AMOUNT__c}
+                             </div>
+                            </td>
+                        </tr>
+                     </apex:repeat>
+                  </tbody>
+            </table>
+        
+         <apex:actionFunction name="actionfunc" action="{!deletemethod}" reRender="block">
+         <apex:param value="" name="idd" assignto="{!delvalue}"/>
+         </apex:actionFunction>
+         
+       
+</apex:form>
+</html>
+</apex:page>

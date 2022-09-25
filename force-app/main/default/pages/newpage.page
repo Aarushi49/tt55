@@ -1,0 +1,17 @@
+<apex:page controller="newcontroller">
+ <apex:form >
+  <apex:pageblock >
+  <apex:pageBlockSection >
+  
+  <apex:inputField value="{!con.Name}"/>
+  <apex:inputField value="{!con.Level__c}"/>
+  <apex:inputField value="{!con.lOAN_AMOUNT__c}"/>
+  
+  </apex:pageBlockSection>
+  
+  <apex:pageBlockButtons >
+    <apex:commandButton value="Save" action="{!save}"/>
+  </apex:pageBlockButtons>
+  </apex:pageblock>
+ </apex:form>
+</apex:page>

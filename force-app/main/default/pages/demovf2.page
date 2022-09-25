@@ -1,0 +1,699 @@
+<apex:page id="page" controller="onlinetestclass" showHeader="false" sidebar="false">
+    <html  xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+     <head >
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+            <apex:slds />
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script>
+            
+          
+                var t;
+                var timeinterval;
+         var isTestRunning = false; 
+         var elem = document.documentElement;
+         
+         
+        function openFullscreen() {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { /* Firefox */
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                elem.msRequestFullscreen();
+            }
+        }
+  
+      function closeFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { /* Firefox */
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE/Edge */
+                document.msExitFullscreen();
+            }
+        }
+         
+ /*        function userCheated() {
+             if(isTestRunning){
+                // The user cheated by leaving this window (e.g opening another window)
+                // Do something
+                alert("You can't cheat!");
+             }
+            
+        }
+        */
+        
+                   
+       
+        
+                function Startscript()
+                {  
+                    
+                     
+                  openFullscreen(); 
+         $(document).keydown(function (e) {  
+            return (e.which || e.keyCode) != 116;  
+        });
+        
+        $(document).keydown(function (e) {  
+            return (e.which || e.keyCode) != 27;  
+        }); 
+         
+           
+                     
+                    $("#spinner").hide();
+                    $("#pb").show();
+                    $("#header").show();
+                    $("#startdiv").hide();
+                    
+                    
+                    var time_in_minutes =10;
+                    var current_time = Date.parse(new Date());
+                    var deadline = new Date(current_time + time_in_minutes*60*1000);
+                    
+                    
+                    function time_remaining(endtime){
+                         t = Date.parse(endtime) - Date.parse(new Date());
+                        var seconds = Math.floor( (t/1000) % 60 );
+                        var minutes = Math.floor( (t/1000/60) % 60 );
+                        var hours = Math.floor( (t/(1000*60*60)) % 24 );
+                        var days = Math.floor( t/(1000*60*60*24) );
+                        return {'total':t, 'days':days, 'hours':hours, 'minutes':minutes, 'seconds':seconds};
+                    }
+                    function run_clock(id,endtime){
+                        var clock = document.getElementById(id);
+                        function update_clock(){
+                            var t = time_remaining(endtime);
+                            clock.innerHTML = t.minutes+ 'minutes ' +t.seconds+'seconds ';
+                            if(t.total<=0){  
+                                clearInterval(timeinterval);
+                                $("#timeup").show();
+                                
+                                
+                            }
+                        }
+                        update_clock(); // run function once at first to avoid delay
+                         timeinterval = setInterval(update_clock,1000);
+                    }
+                    
+                    run_clock('clockdiv',deadline);
+                    
+                }
+                
+                
+                var questionAnsMap = {};
+                function captureResponse(ele){
+                    var v = $("input[name='"+ele+"']:checked").val();
+                    questionAnsMap[ele] = v ;
+                    if(!$('#QuesBtn-'+ele).hasClass('greenColor')){
+                        $('#QuesBtn-'+ele).addClass('greenColor');
+                    }
+                    
+                    console.log(questionAnsMap);
+                }
+                
+                function captureMultiResponse(ele){
+                    var v = $("input[name='"+ele+"']:checked") ;
+                    var ansList = [];
+                    $(v).each(function(index,element){
+                        console.log(element);
+                        ansList.push($(element).val());
+                    });
+                    if(ansList.length==0){
+                        $('#QuesBtn-'+ele).removeClass('greenColor');
+                    }else{
+                        if(!$('#QuesBtn-'+ele).hasClass('greenColor')){
+                            $('#QuesBtn-'+ele).addClass('greenColor');
+                        }
+                    }
+                    questionAnsMap[ele] = ansList.join(",");
+                    console.log(questionAnsMap);
+                }
+                
+                
+                function confirm(){
+                $("#confirmmodal").show();
+                }
+                
+                function cancel(){
+                $("#confirmmodal").hide();
+                }
+                
+                function end(){
+                clearInterval(timeinterval);
+                $("#confirmmodal").hide();
+                submitTest();
+                }
+                
+               
+                
+                function submitTest(){
+                 $("#timeup").hide();
+                   debugger;
+                   $("#spinner").show();
+                  
+                    
+                    var cc = '{! cid}';
+                     
+                    if(!jQuery.isEmptyObject(questionAnsMap)){
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.onlinetestclass.saveResult}',
+                            questionAnsMap,cc,
+                            function(result,event) {
+                                if(event.status) {
+                               
+                               var attempt=Object.keys(questionAnsMap).length;
+                               var unattempt='{! c}'- attempt;
+                               
+                                    $("#spinner").hide();
+                                    $("#score").html( result);
+                                    $("#attempted").html(attempt);
+                                    $("#unattempted").html(unattempt);
+                                    $("#result").show();
+                                    $("#header").hide();
+                                    $("#pb").hide();
+                                }else{
+                                }
+                            }
+                        );
+                    }else{
+                        $("#spinner").hide();
+                        $("#score").html(' 0 ');  
+                        $("#attempted").html('0 ');
+                        $("#unattempted").html('20');
+                        $("#result").show();
+                        $("#header").hide();
+                        $("#pb").hide();
+                    }
+                    
+                    
+                    
+                } 
+                function showSpecificQuestion(ele){
+                    $('.allQuestionClass').hide();
+                    $('#Ques-'+ele).show();
+                    $('.allQuesBtnClass').removeClass('slds-button_brand').addClass('slds-button_neutral');
+                    $('#QuesBtn-'+ele).removeClass('slds-button_neutral').addClass('slds-button_brand');
+                }   
+                function nextQuestion(ele){
+                    ele++;
+                    navigateToQuestion(ele);
+                }   
+                function previousQuestion(ele){
+                    ele--;
+                    navigateToQuestion(ele);
+                }
+                function navigateToQuestion(ele){
+                    var qMax = {! maxQues};
+                    if(ele>qMax){
+                        ele = qMax;
+                    }else if(ele<=0){
+                        ele = 1;
+                    }
+                    $('.qNavigator-'+ele).click();
+                }
+                
+                function site(){
+                                console.log('heyyy');
+
+                }
+            </script>
+            
+             <style>
+                .slds-scope .slds-card+.slds-card {
+                    margin-top: 0rem;
+                }
+                 .greenColor{
+                    background: green !IMPORTANT;
+                    color: white !IMPORTANT;
+                 }
+                 .yellowColor{
+                    background: #ffeb3b !IMPORTANT;
+                    color: white !IMPORTANT;
+                 }
+                 #clockdiv {
+                 font-size: 20px;
+                 text-align: right;
+                 background-color: grey;
+                 color:white;
+                 }
+                 #pb{
+                    background-color: #dcdcdc;
+
+                 }
+                 .heading {
+                          padding: 2px;
+                          background: green;
+                          color: white;
+                          font-size: 10px;
+                        }
+                        
+                 #resultheader{
+                 font-size: 3.2rem;
+                 line-height: 4rem;    
+                 }   
+                 
+                 
+                .split {
+                  height: 100%;
+                  width: 50%;
+                  position: fixed;
+                  z-index:-1;   
+                  top: 0;
+                  overflow-x: hidden;
+                 
+                }
+                
+                .left {
+                 left: 0;  
+                 background-color: white;
+                 }
+                 
+                 #kcloudtheme{
+                 max-width: 100%;
+                 height: 100%;
+                  
+                 }
+                 
+                 .centered {
+              position: absolute;
+              top: 30%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+            }
+              .linkweb{
+              position: absolute;
+              top: 80%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+              text-decoration: underline;
+              
+            }      
+               
+             .right {
+                 right: 0;
+                 border:0px;
+                 overflow-x:hidden;
+                 overflow-y:hidden;
+                 background-color: #dcdcdc;
+                 }
+                 
+             span{
+             font-size:1.25rem;
+             }
+             
+             .container {
+              position: relative;
+              text-align: center;
+              color: white;
+             
+            }
+
+            .media{
+            position: absolute;
+            top:10%;
+            left: 40%;
+            padding: 15px;
+            
+            } 
+           
+            i{
+            height: 200px;
+            width: 30px;
+            }
+            
+            .r1{
+            text-align:left;
+            font-weight:bold;
+            font-size:1.25rem;
+            }  
+                   
+            
+            .buttonwrapper{
+            align:center;
+            }
+            
+            #textwrapper{
+            position:relative; 
+            color:white; 
+            font-size:2rem;
+            text-align:center;
+            padding-top: 50px;
+            }
+            
+            </style>
+        </head>
+        <body>
+     
+      
+<div id="startdiv" style="background-color: grey;"> 
+<div  class="slds-tabs_card">
+<div class="slds-page-header">
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-title">
+<div class="slds-media">
+<div class="slds-media__figure">
+<span class="slds-icon_container slds-icon-utility-picklist_type">
+            <svg class="slds-icon slds-icon-text-warning slds-page-header__icon" aria-hidden="true">
+              <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#picklist_type')}"></use>
+            </svg>
+</span>
+</div>
+<div class="slds-media__body">
+<div class="slds-page-header__name">
+<div class="slds-page-header__name-title">
+<span class="slds-page-header__title slds-truncate"><h6>Instructions</h6></span>
+<span>Online Quiz • Salesforce </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slds-page-header__col-actions">
+<div class="slds-page-header__controls">
+<div class="slds-page-header__control">
+<ul class="slds-button-group-list">
+<li>
+ <apex:form >
+     <apex:commandButton disabled="{!If(cid != null && Len(cid) > 0,false, true)}" value="Start Test" styleClass="slds-button slds-button_brand" action="{!testdisplay}" onclick="$('#spinner').show();" oncomplete="Startscript();" reRender="block" />
+ </apex:form>              
+</li>
+<li>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-meta">
+</div>
+</div>
+</div>
+</div>
+<div class="slds-tabs_card">
+<div class="slds-page-header">
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-title">
+<div class="slds-page-header__col-meta">
+<ol class="slds-list_ordered slds-page-header__meta-text" type ="A" style="font:35px;">
+                                <li>Click on start button to start test.</li>
+                                <li>Test duration is : 30 mins.</li>
+                                <li>No of Questions : 20</li>
+                                <li>You can end test in between by clicking on end test.</li>
+                                <li>You can add more than 1 answer for checkbox.</li>
+                                <li>Test Score will be displayed after test.</li>
+                                </ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+  <!--
+  -->  
+               
+<div id="header" class="slds-tabs_card" style="display:none; ">
+<div class="slds-page-header">
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-title">
+<div class="slds-media">
+<div class="slds-media__figure">
+<span class="slds-avatar">
+<img alt="Person name" src="/apexpages/slds/latest/assets/images/avatar1.jpg" title="Person name" />
+</span>
+</div>
+<div class="slds-media__body">
+<div class="slds-page-header__name">
+<div class="slds-page-header__name-title">
+<h1>
+<span>Salesforce Intern</span>
+<span class="slds-page-header__title slds-truncate" title="Recently Viewed">{! cand.First_Name__c } </span>
+</h1>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slds-page-header__col-actions">
+<div class="slds-page-header__controls">
+<div class="slds-page-header__control">
+<span class="slds-icon_container slds-icon-utility-clock" title="Description of icon when needed">
+  <svg class="slds-icon slds-icon-text-success" aria-hidden="true">
+    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#clock')}"></use>
+  </svg>
+  <span class="slds-assistive-text">Description of icon when needed</span>
+</span>
+<ul class="slds-button-group-list">
+<li>
+<button class="slds-button slds-button_neutral" id="clockdiv"></button>
+</li>
+<li>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="slds-page-header__row">
+<div class="slds-page-header__col-meta">
+<p class="slds-page-header__meta-text"> {! cand.Email__c  }  </p>
+</div>
+</div>
+</div>
+</div>    
+                    
+       <!--
+  -->               
+                    
+                    
+                    
+                <div id="pb" style="display:none;">
+                 <apex:outputPanel id="block">
+                 <div class="slds-p-around_small slds-grid">
+                        <div class="slds-col slds-size_2-of-3">
+                            <div class="slds-p-around_small" style="padding-bottom: 100%;">
+                            <apex:repeat value="{!qlist}" var="ques" >
+                              <div class="slds-card allQuestionClass" id="Ques-{! ques.Id}" style="{! IF(ques.Name == '1','','display:none;')}">
+                                <div class="slds-card__header slds-grid " >
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="">
+                                <h2 class="slds-card__header-title">
+                                <span>{!ques.Name}. </span><span >{!ques.QStatement__c}<div id="choose2ques"></div></span>
+                                </h2>
+                                </div>
+                                </header>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <apex:repeat value="{!ques.Answers__r}" var="ans" >
+                                     <apex:outputPanel rendered="{! !ques.Multianswers__c}">
+                                        <div class="">
+                                         <span class="slds-radio">
+                                              <input type="radio" name="{!ques.id}" id="{!ans.Id}" value="{!ans.Id}" onChange="captureResponse('{!ques.id}')" />
+                                              <label class="slds-radio__label" for="{!ans.Id}">
+                                                <span class="slds-radio_faux"></span>
+                                                <span class="slds-form-element__label" >{!ans.Ans_statement__c}</span>
+                                              </label>
+                                            </span>
+                                         </div>
+                                      </apex:outputPanel>
+                                      <apex:outputPanel rendered="{! ques.Multianswers__c}" >
+                                      <div class="">
+                                            <div class="slds-checkbox">
+                                              <input type="checkbox" name="{!ques.id}" id="{!ans.Id}" value="{!ans.Id}" onChange="captureMultiResponse('{!ques.id}')"/>
+                                              <label class="slds-checkbox__label" for="{!ans.Id}">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label">{!ans.Ans_statement__c}</span>
+                                              </label>
+                                            </div>
+                                          </div>
+                                      </apex:outputPanel>
+                                 </apex:repeat>
+                               </div>
+                               <div class="slds-card__footer">
+
+                                   <button class="slds-button slds-button_brand" onClick="previousQuestion('{! ques.Name}');">
+                                       Previous
+                                   </button>
+                                   <button class="slds-button slds-button_brand" onClick="nextQuestion('{! ques.Name}');">
+                                       Next
+                                   </button>
+
+                              </div>  
+                             </div>
+                         </apex:repeat>
+                                </div>
+                        </div>
+                       
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="slds-p-around_small">
+                                <div class="slds-card">
+                                <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                
+                                <div class="">
+                                <h2 class="slds-card__header-title">
+                                <span>Questions Navigator</span>
+                                
+                                </h2>
+                                </div>
+                                
+                                </header>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <div>
+                                        <apex:repeat value="{!qlist}" var="ques" >
+                                            <button class="slds-button qNavigator-{!ques.Name} allQuesBtnClass {! IF(ques.Name == '1','slds-button_brand','slds-button_neutral')}" id="QuesBtn-{! ques.Id}" onClick="showSpecificQuestion('{! ques.Id}');">
+                                                {! ques.Name}
+                                            </button>
+                                        </apex:repeat>
+                                    </div>
+                               </div>
+                               
+                                <div class="slds-card__footer">
+                                   <button  id="endbutton" class="slds-button slds-button_brand" onClick="confirm();" >End Test</button>
+                                 </div>
+                                 
+                             </div>
+                            </div>
+                        </div>
+                        </div>
+                       </apex:outputPanel>
+
+                    </div>
+                    
+ <!--
+  --> 
+<div id="confirmmodal" style="height:640px;display:none;">
+  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Are you sure you want to end test?</h2>
+      </header>
+     
+      <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral" onClick="cancel();">Cancel</button>
+        <button id="buttonspin" class="slds-button slds-button_brand" onClick="end();">I am sure</button>
+      </footer>
+    </div>
+  </section>
+  <div class="slds-backdrop slds-backdrop_open"></div>
+</div>
+             
+<!--
+  -->  
+<div id="spinner" style="display:none;">
+  <div class="demo-only" style="height:6rem">
+  <div class="slds-spinner_container">
+    <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+      <span class="slds-assistive-text">Loading</span>
+      <div class="slds-spinner__dot-a"></div>
+      <div class="slds-spinner__dot-b"></div>
+    </div>
+  </div>
+</div>   
+</div>   
+<!--
+-->
+
+<div id="timeup" style="height:640px;display:none; border:2px;">
+  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Your time is finish.Please end test.</h2>
+      </header>
+     
+      <footer class="slds-modal__footer">
+        
+        <button id="buttonspin" class="slds-button slds-button_brand" onClick="end();">End Test</button>
+      </footer>
+    </div>
+  </section>
+  <div class="slds-backdrop slds-backdrop_open"></div>
+</div>
+<!--
+-->
+
+<div id="result" style="height:640px; display:none;">     
+<div class="split right">
+<div class= "contentwrapper" style="height:45%;">
+<img src="{!$Resource.a1}" style="position:absolute; height:45%; width:100%;"/>
+<div>
+<h2  id="textwrapper" class="slds-text-heading_medium"><b>"Help your business grow with the world’s #1 CRM with us."</b>
+<br></br> -Salesforce Implementation partner</h2>
+<br></br>
+<!--
+<a href="https://www.kcloudtechnologies.com" target="_blank"><button type ="button" class="slds-button slds-button_brand">Learn More</button></a>
+-->
+</div>
+</div>
+
+<img src="{!$Resource.a2}" style="height:50%; width:100%;"/>
+
+<div class="container">
+<div class="media" >
+<a href="https://www.facebook.com/KcloudTechnologies" target="_blank" title="facebook" class="socials-item">
+<i class="fa fa-facebook fa-2x" aria-hidden="true" style ="color:#3B5998;"></i></a>&nbsp;
+<a href="https://twitter.com/intent/follow?source=followbutton&variant=1.0&screen_name=KcloudTech" target="_blank" title="twitter" class="socials-item">
+<i class="fa fa-twitter fa-2x" aria-hidden="true" style ="color:#00ACEE;"></i></a>&nbsp;
+<a href="https://www.linkedin.com/company/bcloud-consultancy" target="_blank" title="linkedin" class="socials-item">
+<i class="fa fa-linkedin fa-2x" aria-hidden="true" style ="color:#0077B5;"></i></a>&nbsp;
+</div>
+</div>
+</div>
+ 
+
+ <div class="split left">
+  <div class="centered">
+  <img src="{!$Resource.kcloudlogo}" style="max-width:50%; height:auto;"/>
+  <br></br>
+  <br></br>
+  <article class="slds-card" style="width:80%; height=100%; background-color:#dcdcdc;">
+  <div class="slds-card__header slds-grid">
+    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+    <div class="slds-media__body">
+      <div class="slds-media__figure">
+        <span class="slds-icon_container slds-icon-standard-skill" title="account">
+          <svg class="slds-icon slds-icon_small" aria-hidden="true">
+           &nbsp;&nbsp; <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/standard-sprite/svg/symbols.svg#skill')}"></use>
+          </svg>
+          <span class="slds-assistive-text">result</span>
+        </span>
+        <h2 class="slds-card__header-title">         
+            <span>Score card</span>         
+        </h2>
+      </div>    
+        
+      </div>
+     
+    </header>
+  </div>
+  <div class="slds-card__body slds-card__body_inner">
+  <div class="slds-text-heading_medium r1">Candidate's Name :  {!cand.First_Name__c}</div>
+  <div class="slds-text-heading_medium r1">Attempted :  <span id="attempted"></span></div>
+  <div class="slds-text-heading_medium r1">Unattempted :  <span id="unattempted"></span></div>
+  <div class="slds-text-heading_medium r1">Your score :  <span id="score"></span></div>
+          <p class="slds-truncate" title="Company One">
+           Thank you for taking this test.
+          </p>  </div>
+  
+</article>
+  
+  </div>
+ </div>       
+</div>
+        
+  
+      </body>
+    </html>
+</apex:page>

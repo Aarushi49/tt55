@@ -1,0 +1,20 @@
+<apex:page sidebar="false" controller="classVF" >
+    <apex:form >
+        <apex:outputText value="Enter Account Name:">
+        </apex:outputText>
+        <apex:inputText value="{!accName}"/>
+        <apex:commandButton value="ShowContacts" action="{!ShowContacts}" rerender="out" status="mystatus" /><br/>
+        <apex:actionStatus id="mystatus" startText="please wait contacts are loading...">
+        <apex:facet name="stop">
+            <apex:outputPanel id="out">
+            <apex:pageBlock >
+                <apex:pageBlockSection >
+                    <apex:pageBlockTable value="{!Contacts}" var="c" rendered="{!accName !=null}">
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+    </apex:form>
+</apex:page>

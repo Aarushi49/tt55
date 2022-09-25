@@ -1,0 +1,5 @@
+<apex:page standardController="Contact" extensions="flowController">
+    <flow:interview name="create_case" interview="{!flDemo}" finishLocation="{!prFinishLocation}">
+     <apex:param name="Contactid" value="{!contact.id}"/>
+    </flow:interview>
+</apex:page>

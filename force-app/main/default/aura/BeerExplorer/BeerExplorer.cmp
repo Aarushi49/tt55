@@ -1,0 +1,19 @@
+<aura:component controller="BeerExplorerController" implements="force:appHostable">
+    <aura:handler name="BeerName" event="c:CreateEvent" action="{!c.handleEvent}"/>
+    <aura:handler name="init" value="this" action="{!c.handleEvent}"/>
+    <aura:attribute name="BeerList" type="Object"/>
+    
+    <div class="slds-p-around_small">
+        <c:HeaderComponent tagLine="BeerExplorer" Message="Choose beer !!!"/>
+    </div>
+    <div class="slds-p-around_small">
+        <c:BeerSearch/>
+    </div>
+    
+    <div class="slds-p-around_small">
+        <c:BeerListComponent BeerList="{!v.BeerList}"/>
+    </div>
+   
+    
+    
+</aura:component>

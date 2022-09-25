@@ -1,0 +1,6 @@
+<aura:component >
+	Hello world
+    <p>Hey whats up</p>
+    <br/>
+        <p><lightning:formattedText value="Email salesforce.com and info.salesforce.com" /></p>
+</aura:component>

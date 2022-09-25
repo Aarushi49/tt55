@@ -1,0 +1,16 @@
+<apex:page showHeader="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <head>
+            <apex:slds />
+        </head>
+        <body>
+            <div class="slds-scope">
+                <div class="slds-grid">
+                    <div class="slds-row slds-size_4-of-6">Column 1</div>
+                    <div class="slds-row slds-size_1-of-6">Column 2</div>
+                    <div class="slds-row slds-size_1-of-6">Column 3</div>
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>

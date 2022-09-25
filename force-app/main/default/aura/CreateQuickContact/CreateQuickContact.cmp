@@ -1,0 +1,24 @@
+<aura:component controller="NewContactListController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="Accountid" type="String"/>
+    <aura:attribute name="Createcontact" type="Contact" default="{sobjectName : 'Contact',
+                                                                 FirstName : '',
+                                                                 LastName: '',
+                                                                 Email :'',
+                                                                 Phone : '' }"/>
+    <aura:registerEvent name="createQuickEvent" type="c:CreateEvent"/>
+    <div class="slds-p-around_small">
+        
+        <lightning:input type="text" value="{!v.Createcontact.FirstName}" label="FirstName" required="true"/>
+        
+        <lightning:input type="text" value="{!v.Createcontact.LastName}" label="LastName"  required="true"/>
+        
+        <lightning:input type="email" value="{!v.Createcontact.Email}" label="Email"  required="true"/>
+        
+        <lightning:input type="phone" value="{!v.Createcontact.Phone}" label="Phone"  required="true"/>
+        <br/>        
+        <lightning:button label ="Create Contact" variant="brand" onclick="{!c.CreateContact}"/>
+    </div>
+    
+    
+    
+</aura:component>

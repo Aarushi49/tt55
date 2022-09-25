@@ -1,0 +1,23 @@
+<apex:page Controller="Demovfp2">
+    <apex:form >
+        <apex:pageBlock title="My Block">
+            <apex:pageBlockSection title="My Block Section"  columns="2">
+                <apex:outputLabel >First Name:</apex:outputLabel>
+                <apex:inputText value="{!fn}"/>
+                <apex:outputLabel >Last Name:</apex:outputLabel>
+                <apex:inputText value="{!ln}"/>
+                
+                <Apex:commandButton value="First Name" action="{!firstname}"  rerender="abc"/>
+                <apex:outputLabel id="abc"> "{!message}" </apex:outputLabel> 
+                
+                <Apex:commandButton value="Full Name" action="{!fullname}"  rerender="adc"/>
+                 <apex:outputLabel id="adc"> "{!message1}" </apex:outputLabel> 
+                 
+                 <Apex:commandButton value="Reset" action="{!reset}"  rerender="abc,adc"/>
+                
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+  
+</apex:page>

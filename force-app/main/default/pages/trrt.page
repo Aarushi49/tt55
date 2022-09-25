@@ -1,0 +1,20 @@
+<apex:page controller="trrtclass" showHeader="false">
+    
+    <apex:form >
+     <apex:actionFunction action="{!hey}" name="hey" reRender="hoja"  />
+        <apex:outputPanel id="hoja">
+            <apex:commandLink styleclass="btn-primary" id="SaveButtonID2" status="mystatus" onclick="disableButton2(); call2();" value="hey1"  style="margin-right:5px;background: rgb(23, 124, 156) !important;text-decoration: none !important;padding: 0.7rem 1rem;" action="{!hey}" rendered="{!t}"/>
+                                    
+            <apex:commandLink styleclass="btn-primary" id="SaveButtonID" status="mystatus"  value="hey1"  style="margin-right:5px;background: rgb(128,128,128) !important;text-decoration: none !important;padding: 0.7rem 1rem; cursor: not-allowed;"  rendered="{!!t}" />
+                                   
+            </apex:outputPanel>
+    </apex:form>
+    <script>
+    function disableButton2(){
+        console.log('ooo');
+    }
+     function call2(){
+     console.log('rrr');
+     }
+    </script>
+</apex:page>

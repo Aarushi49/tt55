@@ -1,0 +1,13 @@
+.THIS .buttonDecor{
+    justify-content: flex-start;
+    width: -webkit-fill-available;
+}
+.THIS .listcss{ 
+    border: 1px solid lightgrey;
+    border-radius: 6px;
+}
+.THIS.slds-spinner_container {  
+    z-index: 10000;
+    position: center;   
+    background:none; 
+}

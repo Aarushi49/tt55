@@ -1,0 +1,23 @@
+<aura:component >
+    <aura:attribute name="tagLine" type="String"/>
+    <aura:attribute name="Message" type="String"/>
+
+    <div class="slds-page-header" style="background :pink;">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate" title="Rohde Corp - 80,000 Widgets">{!v.tagLine}</span>
+                                </h1>
+                            </div>
+                        </div>
+                        <p class="slds-page-header__name-meta">{!v.Message}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

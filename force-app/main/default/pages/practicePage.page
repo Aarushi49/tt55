@@ -1,0 +1,30 @@
+<apex:page controller="practicePageController">
+    <apex:form >
+        <apex:actionFunction name="passToController" action="{!printDynamic}" rerender="buttonText2">
+            <apex:param name="passValue" value=""/>
+        </apex:actionFunction>
+        <apex:outputPanel id="buttonText" > <apex:outputPanel rendered="{!show}"><apex:outputText value="{!buttonValue} "/> </apex:outputPanel> </apex:outputPanel>
+        <apex:commandButton action="{!printStatic}" value="Static value" reRender="buttonText">
+            <apex:param value="hey there" assignTo="{!buttonValue}" />
+        </apex:commandButton>
+        <br/>
+        <input type="text" id="dynamicTextValue"/>        &nbsp;&nbsp;
+        <input type="button" value="Dynamic value"  onClick="javascriptfunction();" />
+        <br/>
+        <apex:outputPanel id="buttonText2"><apex:outputText rendered="{!if(AND((buttonValueLength)!=0,buttonValueLength!=null),true,false)}">{!buttonValue} look == {!buttonValueLength}</apex:outputText></apex:outputPanel>
+        
+    </apex:form>
+    <script>
+     function javascriptfunction(){
+         var str=document.getElementById("dynamicTextValue").value;
+         if(str.length > 4){
+             str=str.substring(0,4);
+         }
+         passToController(str);  
+         
+     }
+        
+    </script>
+        
+        
+</apex:page>

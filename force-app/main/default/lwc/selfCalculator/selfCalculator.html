@@ -1,0 +1,12 @@
+<template>
+<h1>CALCULATOR</h1>
+<lightning-input type="number" onblur={onChangeValue1} value={value1} label="First input" ></lightning-input>
+<lightning-input type="number" onblur={onChangeValue2} value={value2} label="Second Input" ></lightning-input>
+<lightning-input type="number" value={finalResult} label="Final"></lightning-input>
+
+NUMBER 1 IS - {value1}<br/>
+<lightning-button label="ADD" variant="brand" onclick={add}></lightning-button>&nbsp;
+<lightning-button label="SUBTRACT" variant="brand" onclick={subtract}></lightning-button>&nbsp;
+<lightning-button label="MULTIPLY" variant="brand" onclick={multiply}></lightning-button>&nbsp;
+<lightning-button label="DIVIDE" variant="brand" onclick={divide}></lightning-button>
+</template>

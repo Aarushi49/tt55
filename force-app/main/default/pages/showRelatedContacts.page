@@ -1,0 +1,12 @@
+<apex:page standardController="Account" >
+<apex:pageBlock >
+<table>
+<tr>
+<td><apex:outputText value="{!account.Name}"/></td>
+    </tr>
+<apex:repeat value="{!account.Contacts}" var="cont">
+<tr><td><apex:outputText value="{!cont.Name}"/></td></tr>
+</apex:repeat>
+</table>
+</apex:pageBlock>
+</apex:page>

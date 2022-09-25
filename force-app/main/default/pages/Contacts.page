@@ -1,0 +1,18 @@
+<apex:page Controller="MyTableWithQueryClass">
+<apex:form >
+    <apex:pageBlock title="Contacts">
+        <apex:pageBlockButtons >
+                        <apex:commandButton action="{!ShowData}" value="Show" rerender="Table"/>
+        </apex:pageBlockButtons> 
+
+        <apex:pageBlockTable value="{!ContactList}" var="contact" id="Table">
+             <apex:column value="{!contact.Name}"/>
+             <apex:column value="{!contact.Email}"/>
+        </apex:pageBlockTable>
+        
+        <!-- value tell u the source of data | var tell u which variable to store record one by one,
+        same like for each -->
+        
+   </apex:pageBlock>
+ </apex:form>
+</apex:page>

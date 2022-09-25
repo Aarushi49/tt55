@@ -1,0 +1,22 @@
+<aura:component >
+    <div class="slds-p-around_xx-large">
+        <lightning:input aura:id="input1" type="number" name="input1" label="Enter first number" required="true"/><br/>
+        <lightning:input aura:id="input2" type="number" name="input2" label="Enter second number" required="true"/>
+        <br/>
+        Click on any of the following buttons to perform actions. <br/><br/>
+        <div class="slds-align_absolute-center">
+            <lightning:button variant="brand" label="ADD" onclick="{!c.doAdd}"/>
+            <lightning:button variant="brand" label="SUB" onclick="{!c.doSub}"/>
+            <lightning:button variant="brand" label="MULT" onclick ="{!c.doMult}"/>
+            <lightning:button variant="brand" label="DIV" onclick="{!c.doDiv}"/>
+            <br/>
+            <br/>
+            <br/>
+           
+        </div>
+        
+                    <lightning:input aura:id="input3" type="number" name="result" label="Result" />
+
+        
+    </div>
+</aura:component>

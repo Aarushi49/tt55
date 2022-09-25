@@ -1,0 +1,5 @@
+<aura:component >
+    <c:ChildComp aura:id="Childid" onClick="{!c.CheckOnClick}"/>
+    <lightning:button label ="Try" variant="brand" onclick="{!c.TryButton}"/>
+    
+</aura:component>

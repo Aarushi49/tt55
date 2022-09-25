@@ -1,0 +1,21 @@
+<template>
+<lightning-card icon-name="standard:contact" title="Contact">
+<div class="slds-p-around_medium">
+<template if:true={contacts}>
+<template for:each={contacts} for:item="contact" for:index="index">
+<c-contact-list-child contact={contact} key={contact.id}></c-contact-list-child>
+</template>
+</template>
+</div>
+</lightning-card>
+
+<lightning-card icon-name="standard:contact" title="New List Through Iteration">
+    <div class="slds-p-around_medium">
+    <template iterator:con ={contacts}>
+    <div if:true={con.first} key={con.value.id}>---------------------------</div>
+    <c-contact-list-child contact={con.value} key={con.value.id}></c-contact-list-child>
+    <div if:true={con.last} key={con.value.id}>---------------------------</div>
+</template>
+    </div>
+</lightning-card>
+</template>

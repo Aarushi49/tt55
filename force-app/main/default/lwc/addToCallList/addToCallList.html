@@ -1,0 +1,44 @@
+<template>
+
+    <div>
+        <lightning-card>
+            <h3 slot="title">
+                <lightning-icon icon-name="standard:voice_call" size="large"></lightning-icon>
+                &ensp; Add Records To the Call List <br />
+
+            </h3>
+            <lightning-button variant="brand" label="Save" slot="actions" onclick={handleclick}></lightning-button>
+            <div style="padding: 3vh;">
+                <lightning-badge label="Select Object To Begin" icon-name="utility:arrow_bottom"></lightning-badge>
+
+                <lightning-combobox name="object" value={value} placeholder="Select Object" options={options}
+                    onchange={handleChange}></lightning-combobox>
+            </div>
+        </lightning-card>
+
+
+        <lightning-card>
+            <div style=" padding-top: 10px;">
+                <div style="padding: 2vh 20vh;">
+                    <lightning-input name="enter-search" placeholder="Search" type="search" value={searchString} onchange={handleSearch}>
+                    </lightning-input>
+                </div>
+                <div style="padding: 3vh;">
+                    <lightning-datatable key-field="id" data={data} columns={columns} 
+                        show-row-number-column >
+                        >
+                    </lightning-datatable>
+                </div>
+            </div>
+        </lightning-card>
+
+
+    </div>
+
+    <template if:true={isLoading}>
+        <div class="slds-p-around_x-large">
+            <lightning-spinner alternative-text="Loading" size="large" variant="brand"></lightning-spinner>
+        </div>
+    </template>
+
+</template>
