@@ -13,7 +13,7 @@ public class AccountFactory {
     private List<String> accountNames;
 
     public AccountFactory() {
-        system.debug('new debug in controller gggggv');
+        system.debug('new debug in controller starting');
         initAccountNames();
     }
 
