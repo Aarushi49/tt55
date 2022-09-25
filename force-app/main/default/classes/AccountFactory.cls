@@ -13,7 +13,7 @@ public class AccountFactory {
     private List<String> accountNames;
 
     public AccountFactory() {
-        system.debug('new debug in controller starting mastergit from github from vscode just one class');
+        system.debug('new debug in controller starting mastergit from github from vscode just one class 11');
         initAccountNames();
     }
 
